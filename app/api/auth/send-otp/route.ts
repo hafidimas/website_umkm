@@ -1,16 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// In-Memory OTP Store untuk simulasi cepat & handal (Nomor WA -> { otp, expiresAt })
-const otpStore = new Map<string, { otp: string; expiresAt: number }>();
-
-// GET helper untuk mengakses store secara aman di endpoint verifikasi
-export function getOtpFromStore(phone: string) {
-    return otpStore.get(phone);
-}
-
-export function removeOtpFromStore(phone: string) {
-    otpStore.delete(phone);
-}
+import { setOtpToStore } from '../../../../lib/otpStore';
 
 // POST /api/auth/send-otp - Mengirimkan Kode OTP 6-Digit via WhatsApp
 export async function POST(req: NextRequest) {
@@ -38,7 +27,7 @@ export async function POST(req: NextRequest) {
         const expiresAt = Date.now() + 5 * 60 * 1000; // Kadaluarsa dalam 5 menit
 
         // Simpan di store
-        otpStore.set(cleanPhone, { otp: otpCode, expiresAt });
+        setOtpToStore(cleanPhone, otpCode, expiresAt);
 
         // Teks Pesan WhatsApp Otomatis
         const waMessage = `Kode%20verifikasi%20OTP%20Kebun%20Devsecora%20Anda%20adalah:%20*${otpCode}*.%20Jangan%20berikan%20kode%20ini%20kepada%20siapapun.%20Berlaku%205%20menit.`;

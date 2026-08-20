@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
-import { getOtpFromStore, removeOtpFromStore } from '../send-otp/route';
+import { getOtpFromStore, removeOtpFromStore } from '../../../../lib/otpStore';
 
 // POST /api/auth/verify-otp - Memverifikasi Kode OTP 6-Digit WhatsApp
 export async function POST(req: NextRequest) {

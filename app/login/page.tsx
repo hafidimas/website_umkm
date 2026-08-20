@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useShop } from '../../context/ShopContext';
 
-export default function LoginPage() {
+function LoginFormInner() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const reason = searchParams.get('reason');
@@ -455,5 +455,20 @@ export default function LoginPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#F8FAFC' }}>
+                <div style={{ textAlign: 'center', color: 'var(--primary)', fontSize: '16px', fontWeight: 700 }}>
+                    <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '28px', marginBottom: '12px' }}></i>
+                    <p>Memuat Halaman Login...</p>
+                </div>
+            </div>
+        }>
+            <LoginFormInner />
+        </Suspense>
     );
 }
