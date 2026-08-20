@@ -1,0 +1,131 @@
+// Prisma Schema untuk Devsecora Hydroponics E-Commerce
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 1. TABEL PENGGUNA (Mendukung WhatsApp & Email)
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  phoneWa       String?   @unique
+  email         String?   @unique
+  passwordHash  String?
+  role          String    @default("CUSTOMER") // ADMIN | CUSTOMER
+  isWaVerified  Boolean   @default(false)
+  address       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  orders        Order[]
+}
+
+// 2. TABEL KATEGORI KEBUN (100% Dinamis untuk Admin)
+model Category {
+  id            String    @id @default(uuid())
+  slug          String    @unique
+  nameId        String
+  nameEn        String
+  descriptionId String?
+  descriptionEn String?
+  iconName      String    @default("fa-leaf")
+  imageUrl      String?
+  isActive      Boolean   @default(true)
+  displayOrder  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  products      Product[]
+}
+
+// 3. TABEL PRODUK SAYUR
+model Product {
+  id              String      @id @default(uuid())
+  categoryId      String
+  slug            String      @unique
+  titleId         String
+  titleEn         String?
+  price           Float
+  originalPrice   Float
+  stock           Int         @default(50)
+  weight          String
+  weightEn        String?
+  harvestTime     String      @default("Panen Pagi 05:00 WIB")
+  stockStatus     String      @default("🟢 Ready Stock")
+  farmOrigin      String      @default("Green House Steril Devsecora")
+  nutritionId     String
+  nutritionEn     String?
+  storageTip      String?
+  culinaryUses    String?
+  discount        String      @default("-0%")
+  image           String
+  descriptionId   String
+  descriptionEn   String?
+  rating          Float       @default(5.0)
+  reviewsCount    Int         @default(0)
+  isPesticideFree Boolean     @default(true)
+  isBestseller    Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  category        Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  orderItems      OrderItem[]
+}
+
+// 4. TABEL PESANAN & TRANSAKSI
+model Order {
+  id              String      @id @default(uuid())
+  orderNumber     String      @unique
+  userId          String?
+  customerName    String
+  customerPhone   String
+  customerAddress String
+  totalAmount     Float
+  status          String      @default("PENDING") // PENDING | PAID | PROCESSING | SHIPPED | COMPLETED | CANCELLED
+  paymentMethod   String      @default("WHATSAPP_DIRECT")
+  shippingNotes   String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  user            User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items           OrderItem[]
+}
+
+// 5. ITEM PESANAN
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String
+  productId   String
+  qty         Int
+  price       Float
+
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+}
+
+// 6. TABEL ARTIKEL & RESEP
+model RecipeArticle {
+  id            String   @id @default(uuid())
+  type          String   @default("RESEP") // RESEP | ARTIKEL
+  slug          String   @unique
+  titleId       String
+  titleEn       String?
+  category      String
+  categoryEn    String?
+  image         String
+  prepTime      String?
+  servings      String?
+  difficulty    String?
+  calories      String?
+  summaryId     String
+  summaryEn     String?
+  ingredientsJson String? // JSON String
+  stepsJson       String? // JSON String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
