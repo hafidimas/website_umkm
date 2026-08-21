@@ -191,16 +191,30 @@ export const Navbar: React.FC = () => {
                     {/* NAV RIGHT GROUP - CLEANED & FUNCTIONAL */}
                     <div className="nav-right-group">
                         <div className="nav-selectors">
-                            {/* THEME TOGGLE BUTTON */}
+                            {/* THEME TOGGLE - Modern Day/Night Slider */}
                             <button
                                 type="button"
                                 onClick={toggleTheme}
-                                className="btn-theme-toggle"
-                                title={theme === 'dark' ? 'Ganti ke Mode Terang (Light)' : 'Ganti ke Mode Gelap (Dark)'}
+                                className={`day-night-toggle ${theme === 'dark' ? 'is-night' : 'is-day'}`}
+                                title={theme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'}
                                 aria-label="Ganti Tema Tampilan"
                             >
-                                <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
-                                <span className="theme-label">{theme === 'dark' ? 'Terang' : 'Gelap'}</span>
+                                <span className="toggle-track">
+                                    <span className="track-day">
+                                        <span className="cloud cloud-1"></span>
+                                        <span className="cloud cloud-2"></span>
+                                    </span>
+                                    <span className="track-night">
+                                        <span className="star star-1"></span>
+                                        <span className="star star-2"></span>
+                                        <span className="star star-3"></span>
+                                        <span className="star star-4"></span>
+                                    </span>
+                                    <span className="toggle-thumb">
+                                        <span className="thumb-sun"></span>
+                                        <span className="thumb-moon"></span>
+                                    </span>
+                                </span>
                             </button>
 
                             {/* LANGUAGE SWITCHER */}
