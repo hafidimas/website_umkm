@@ -1,101 +1,89 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prisma';
 
-// POST /api/auth/register - Pendaftaran Pengguna via WhatsApp / Email
+// POST /api/auth/register - Pendaftaran via Email + Password
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { name, phoneWa, email, password, registrationMethod } = body;
+        const { name, email, password, confirmPassword } = body;
 
-        if (!name) {
+        // Validasi: semua field wajib ada
+        if (!name || !email || !password) {
             return NextResponse.json({
                 success: false,
-                message: 'Nama lengkap wajib diisi'
+                message: 'Nama, email, dan password wajib diisi'
             }, { status: 400 });
         }
 
-        let existingUser = null;
-
-        // Metodologi 1: Register via WhatsApp
-        if (registrationMethod === 'whatsapp') {
-            if (!phoneWa) {
-                return NextResponse.json({
-                    success: false,
-                    message: 'Nomor WhatsApp wajib diisi'
-                }, { status: 400 });
-            }
-
-            // Normalisasi nomor HP ke format standar (misal: 0812... atau 62812...)
-            const cleanPhone = phoneWa.replace(/[^0-9]/g, '');
-
-            existingUser = await prisma.user.findFirst({
-                where: { phoneWa: cleanPhone }
-            });
-
-            if (existingUser) {
-                return NextResponse.json({
-                    success: true,
-                    message: 'Nomor WhatsApp sudah terdaftar! Mengalihkan ke akun Anda...',
-                    data: existingUser,
-                    isExisting: true
-                });
-            }
-
-            const newUser = await prisma.user.create({
-                data: {
-                    name,
-                    phoneWa: cleanPhone,
-                    isWaVerified: true,
-                    role: 'CUSTOMER'
-                }
-            });
-
-            return NextResponse.json({
-                success: true,
-                message: 'Registrasi via WhatsApp berhasil!',
-                data: newUser,
-                redirectWaUrl: `https://wa.me/6281298765432?text=Halo%20Admin%20Devsecora%20Hydroponics,%20saya%20telah%20mendaftar%20akun%20baru:%0ANama:%20${encodeURIComponent(name)}%0ANo.WA:%20${encodeURIComponent(cleanPhone)}%0AMohon%20bantu%20konfirmasi%20pendaftaran%20akun%20saya.`
-            }, { status: 201 });
-        }
-
-        // Metodologi 2: Register via Email
-        if (!email || !password) {
+        // Validasi: nama minimal 2 karakter
+        if (name.trim().length < 2) {
             return NextResponse.json({
                 success: false,
-                message: 'Email dan password wajib diisi untuk pendaftaran email'
+                message: 'Nama lengkap minimal 2 karakter'
             }, { status: 400 });
         }
 
-        existingUser = await prisma.user.findFirst({
-            where: { email }
+        // Validasi: format email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return NextResponse.json({
+                success: false,
+                message: 'Format email tidak valid'
+            }, { status: 400 });
+        }
+
+        // Validasi: password minimal 6 karakter
+        if (password.length < 6) {
+            return NextResponse.json({
+                success: false,
+                message: 'Password minimal 6 karakter'
+            }, { status: 400 });
+        }
+
+        // Validasi: konfirmasi password harus cocok (jika dikirim dari frontend)
+        if (confirmPassword !== undefined && password !== confirmPassword) {
+            return NextResponse.json({
+                success: false,
+                message: 'Password dan konfirmasi password tidak cocok'
+            }, { status: 400 });
+        }
+
+        // Cek apakah email sudah terdaftar
+        const existingUser = await prisma.user.findFirst({
+            where: { email: email.toLowerCase().trim() }
         });
 
         if (existingUser) {
             return NextResponse.json({
                 success: false,
-                message: 'Email sudah terdaftar. Silakan gunakan email lain atau login.'
+                message: 'Email sudah terdaftar. Silakan login atau gunakan email lain.'
             }, { status: 400 });
         }
 
+        // Simpan user baru ke database
         const newUser = await prisma.user.create({
             data: {
-                name,
-                email,
-                passwordHash: password, // Di versi produksi menggunakan bcrypt/argon2
+                name: name.trim(),
+                email: email.toLowerCase().trim(),
+                passwordHash: password, // Gunakan bcrypt di produksi
                 role: 'CUSTOMER'
             }
         });
 
         return NextResponse.json({
             success: true,
-            message: 'Registrasi Akun Email berhasil!',
-            data: newUser
+            message: `Akun berhasil dibuat! Selamat datang, ${newUser.name}.`,
+            data: {
+                id: newUser.id,
+                name: newUser.name,
+                email: newUser.email
+            }
         }, { status: 201 });
 
     } catch (error: any) {
         return NextResponse.json({
             success: false,
-            message: 'Gagal memproses pendaftaran akun',
+            message: 'Gagal memproses pendaftaran',
             error: error?.message
         }, { status: 500 });
     }
