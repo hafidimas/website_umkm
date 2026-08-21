@@ -13,6 +13,8 @@ export const Navbar: React.FC = () => {
         setIsCartOpen,
         currency,
         language,
+        theme,
+        toggleTheme,
         setCurrency,
         setLanguage,
         formatPrice,
@@ -189,6 +191,18 @@ export const Navbar: React.FC = () => {
                     {/* NAV RIGHT GROUP - CLEANED & FUNCTIONAL */}
                     <div className="nav-right-group">
                         <div className="nav-selectors">
+                            {/* THEME TOGGLE BUTTON */}
+                            <button
+                                type="button"
+                                onClick={toggleTheme}
+                                className="btn-theme-toggle"
+                                title={theme === 'dark' ? 'Ganti ke Mode Terang (Light)' : 'Ganti ke Mode Gelap (Dark)'}
+                                aria-label="Ganti Tema Tampilan"
+                            >
+                                <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`}></i>
+                                <span className="theme-label">{theme === 'dark' ? 'Terang' : 'Gelap'}</span>
+                            </button>
+
                             {/* LANGUAGE SWITCHER */}
                             <select
                                 id="langSelect"

@@ -7,6 +7,7 @@ import { PRODUCTS_DATABASE } from '../data/products';
 export type CurrencyType = 'IDR' | 'USD' | 'EUR' | 'SGD';
 export type LanguageType = 'id' | 'en';
 export type AuthReasonType = 'CART' | 'RECIPES' | 'WISHLIST' | 'GENERAL';
+export type ThemeType = 'light' | 'dark';
 
 export interface UserProfile {
     name: string;
@@ -248,6 +249,7 @@ interface ShopContextType {
     toasts: ToastMessage[];
     currency: CurrencyType;
     language: LanguageType;
+    theme: ThemeType;
     hasRestorableCart: boolean;
 
     // AUTHENTICATION STATES & FUNCTIONS
@@ -263,6 +265,7 @@ interface ShopContextType {
 
     setCurrency: (c: CurrencyType) => void;
     setLanguage: (l: LanguageType) => void;
+    toggleTheme: () => void;
     formatPrice: (amountInIDR: number) => string;
     t: (key: keyof typeof TRANSLATIONS['id']) => string;
     addToCart: (productId: string, qty?: number) => void;
@@ -290,16 +293,17 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
     const [toasts, setToasts] = useState<ToastMessage[]>([]);
     
-    // Currency & Language States
+    // Currency, Language & Theme States
     const [currency, setCurrencyState] = useState<CurrencyType>('IDR');
     const [language, setLanguageState] = useState<LanguageType>('id');
+    const [theme, setTheme] = useState<ThemeType>('light');
 
     // AUTHENTICATION STATES
     const [user, setUser] = useState<UserProfile | null>(null);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
     const [authReason, setAuthReason] = useState<AuthReasonType>('GENERAL');
 
-    // PERSIST USER IN LOCAL STORAGE
+    // PERSIST USER & THEME IN LOCAL STORAGE
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const savedUser = localStorage.getItem('devsecora_user');
@@ -308,8 +312,32 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     setUser(JSON.parse(savedUser));
                 } catch (e) {}
             }
+
+            const savedTheme = localStorage.getItem('devsecora_theme') as ThemeType;
+            if (savedTheme === 'dark' || savedTheme === 'light') {
+                setTheme(savedTheme);
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                setTheme('dark');
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
         }
     }, []);
+
+    const toggleTheme = () => {
+        const nextTheme: ThemeType = theme === 'light' ? 'dark' : 'light';
+        setTheme(nextTheme);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('devsecora_theme', nextTheme);
+            document.documentElement.setAttribute('data-theme', nextTheme);
+        }
+        showToast(
+            language === 'id'
+                ? `Mode tampilan diubah ke ${nextTheme === 'dark' ? 'Gelap 🌙' : 'Terang ☀️'}`
+                : `Theme changed to ${nextTheme === 'dark' ? 'Dark 🌙' : 'Light ☀️'}`,
+            nextTheme === 'dark' ? 'fa-moon' : 'fa-sun'
+        );
+    };
 
     const isLoggedIn = !!user;
 
@@ -503,6 +531,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
             toasts,
             currency,
             language,
+            theme,
             hasRestorableCart: previousCart.length > 0,
             
             // Auth Props
@@ -518,6 +547,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             setCurrency,
             setLanguage,
+            toggleTheme,
             formatPrice,
             t,
             addToCart,
