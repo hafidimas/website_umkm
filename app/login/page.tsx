@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useShop } from '../../context/ShopContext';
 
@@ -17,9 +18,9 @@ function LoginFormInner() {
     const [phoneWa, setPhoneWa] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    // STEP OTP MANAGEMENT
     const [otpStep, setOtpStep] = useState<'INPUT_PHONE' | 'VERIFY_OTP'>('INPUT_PHONE');
     const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '']);
     const [demoOtp, setDemoOtp] = useState<string>('');
@@ -35,27 +36,22 @@ function LoginFormInner() {
         useRef<HTMLInputElement>(null),
     ];
 
-    // TIMER COUNTDOWN FOR RESEND OTP
     useEffect(() => {
         let interval: NodeJS.Timeout;
         if (otpStep === 'VERIFY_OTP' && timerCount > 0) {
-            interval = setInterval(() => {
-                setTimerCount(prev => prev - 1);
-            }, 1000);
+            interval = setInterval(() => setTimerCount(prev => prev - 1), 1000);
         } else if (timerCount === 0) {
             setCanResend(true);
         }
         return () => clearInterval(interval);
     }, [otpStep, timerCount]);
 
-    // REDIRECT AFTER LOGIN
     const handleLoginSuccess = () => {
         loginUser({
             name: email ? email.split('@')[0] : `Pelanggan WA (+62${phoneWa.slice(-4)})`,
             phoneWa: phoneWa ? `+62${phoneWa}` : undefined,
             email: email || undefined
         });
-
         if (reason === 'RECIPES') {
             router.push('/recipes');
         } else {
@@ -63,14 +59,12 @@ function LoginFormInner() {
         }
     };
 
-    // HANDLER SEND OTP WA FOR LOGIN
     const handleSendOtp = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         if (!phoneWa) {
             showToast(isEn ? 'Please enter your WhatsApp number' : 'Mohon masukkan nomor WhatsApp Anda', 'fa-triangle-exclamation');
             return;
         }
-
         setIsLoading(true);
         try {
             const res = await fetch('/api/auth/send-otp', {
@@ -78,9 +72,7 @@ function LoginFormInner() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phoneWa })
             });
-
             const result = await res.json();
-
             if (result.success) {
                 setDemoOtp(result.otpCode);
                 setOtpStep('VERIFY_OTP');
@@ -92,58 +84,46 @@ function LoginFormInner() {
             } else {
                 showToast(result.message || 'Gagal mengirim OTP', 'fa-triangle-exclamation');
             }
-        } catch (err: any) {
+        } catch {
             showToast('Terjadi kesalahan koneksi server', 'fa-triangle-exclamation');
         } finally {
             setIsLoading(false);
         }
     };
 
-    // HANDLER VERIFY OTP FOR LOGIN
     const handleVerifyOtp = async (e: React.FormEvent) => {
         e.preventDefault();
         const fullOtp = otpDigits.join('');
-
         if (fullOtp.length < 6) {
-            showToast(isEn ? 'Please enter complete 6-digit OTP code' : 'Masukkan 6 digit kode OTP secara lengkap', 'fa-triangle-exclamation');
+            showToast(isEn ? 'Please enter complete 6-digit OTP' : 'Masukkan 6 digit kode OTP secara lengkap', 'fa-triangle-exclamation');
             return;
         }
-
         setIsLoading(true);
         try {
             const res = await fetch('/api/auth/verify-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    phoneWa,
-                    otpCode: fullOtp
-                })
+                body: JSON.stringify({ phoneWa, otpCode: fullOtp })
             });
-
             const result = await res.json();
-
             if (result.success) {
                 handleLoginSuccess();
             } else {
                 showToast(result.message || 'Kode OTP salah', 'fa-triangle-exclamation');
             }
-        } catch (err: any) {
+        } catch {
             showToast('Gagal memverifikasi OTP', 'fa-triangle-exclamation');
         } finally {
             setIsLoading(false);
         }
     };
 
-    // HANDLER INPUT DIGIT OTP
     const handleDigitChange = (index: number, val: string) => {
         if (!/^[0-9]?$/.test(val)) return;
         const newDigits = [...otpDigits];
         newDigits[index] = val;
         setOtpDigits(newDigits);
-
-        if (val && index < 5) {
-            inputRefs[index + 1].current?.focus();
-        }
+        if (val && index < 5) inputRefs[index + 1].current?.focus();
     };
 
     const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -152,15 +132,13 @@ function LoginFormInner() {
         }
     };
 
-    // HANDLER EMAIL LOGIN TRADISIONAL
     const handleEmailLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-
         try {
-            await new Promise(resolve => setTimeout(resolve, 600));
+            await new Promise(resolve => setTimeout(resolve, 700));
             handleLoginSuccess();
-        } catch (err) {
+        } catch {
             showToast('Gagal masuk ke akun', 'fa-triangle-exclamation');
         } finally {
             setIsLoading(false);
@@ -168,112 +146,121 @@ function LoginFormInner() {
     };
 
     return (
-        <div className="auth-body">
-            <div className="auth-container">
-                {/* Back Link Button */}
-                <Link href="/shop" className="auth-back-btn">
-                    <i className="fa-solid fa-arrow-left"></i>
-                    <span>{isEn ? 'Back to Fresh Shop' : 'Kembali ke Toko Kebun'}</span>
-                </Link>
-
-                <div className="auth-card">
-                    {/* LEFT SHOWCASE SECTION */}
-                    <div className="auth-showcase">
-                        <div className="auth-showcase-content">
-                            <Link href="/" className="brand-logo" style={{ color: '#FFFFFF' }}>
-                                <div className="logo-icon">
-                                    <i className="fa-solid fa-seedling"></i>
-                                </div>
-                                <div className="logo-text">
-                                    <span className="brand-name" style={{ color: '#FFFFFF' }}>Devsecora</span>
-                                    <span className="brand-sub" style={{ color: '#A3B8A5' }}>HYDRO FARM &amp; PRODUCE</span>
-                                </div>
-                            </Link>
-
-                            <h1 className="showcase-title">
-                                {isEn ? 'Welcome Back to Devsecora Farm' : 'Masuk ke Akun Kebun Devsecora'}
-                            </h1>
-                            <p className="showcase-desc">
-                                {isEn ? 'Log in using instant 6-digit WhatsApp OTP verification to manage your fresh produce orders.' : 'Masuk ke akun Anda menggunakan verifikasi OTP WhatsApp 6-digit serba cepat dan aman.'}
-                            </p>
-
-                            <ul className="auth-benefit-list" style={{ marginBottom: 0 }}>
-                                <li>
-                                    <i className="fa-solid fa-basket-shopping"></i>
-                                    <div>
-                                        <strong>{isEn ? 'Fast & Easy Checkout' : 'Proses Belanja Kilat'}</strong>
-                                        <span>{isEn ? 'Saved addresses & instant WhatsApp ordering' : 'Alamat tersimpan & pemesanan instan'}</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <i className="fa-solid fa-receipt"></i>
-                                    <div>
-                                        <strong>{isEn ? 'Digital Invoice & Order Tracking' : 'Lacak Pengiriman Express'}</strong>
-                                        <span>{isEn ? 'Track 15-30 minute greenhouse delivery' : 'Pantau posisi kurir pengantar sayur'}</span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <i className="fa-solid fa-key"></i>
-                                    <div>
-                                        <strong>{isEn ? 'WhatsApp OTP Verification' : 'Kode OTP WA 6-Digit'}</strong>
-                                        <span>{isEn ? 'Instant login like top marketplace apps' : 'Aman & profesional tanpa kata sandi'}</span>
-                                    </div>
-                                </li>
-                            </ul>
+        <div className="premium-auth-page">
+            {/* LEFT PANEL — Immersive Visual */}
+            <div className="premium-auth-left">
+                <div className="auth-left-overlay" />
+                <Image
+                    src="/auth-hero.jpg"
+                    alt="Devsecora Hydroponics Farm"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    priority
+                />
+                <div className="auth-left-content">
+                    <Link href="/" className="auth-brand-mark">
+                        <div className="auth-brand-icon">
+                            <i className="fa-solid fa-seedling"></i>
                         </div>
+                        <div>
+                            <div className="auth-brand-name">Devsecora</div>
+                            <div className="auth-brand-tagline">HYDRO FARM &amp; PRODUCE</div>
+                        </div>
+                    </Link>
+
+                    <div className="auth-left-hero">
+                        <div className="auth-left-pill">
+                            <i className="fa-solid fa-leaf"></i>
+                            {isEn ? 'Fresh · Organic · Trusted' : 'Segar · Organik · Terpercaya'}
+                        </div>
+                        <h1 className="auth-left-title">
+                            {isEn ? 'Welcome Back to the Greenhouse' : 'Selamat Datang Kembali ke Kebun'}
+                        </h1>
+                        <p className="auth-left-desc">
+                            {isEn
+                                ? 'Log in to manage your orders, track deliveries, and discover today\'s fresh harvest.'
+                                : 'Masuk untuk kelola pesanan, pantau pengiriman, dan temukan sayuran segar hasil panen hari ini.'}
+                        </p>
                     </div>
 
-                    {/* RIGHT FORM BOX SECTION */}
-                    <div className="auth-form-box">
-                        <div className="auth-form-header">
-                            <h2>{isEn ? 'Account Login' : 'Masuk / Login'}</h2>
-                            <p>{isEn ? 'Select your preferred login method' : 'Pilih metode masuk akun Anda'}</p>
+                    <div className="auth-left-stats">
+                        <div className="auth-stat-item">
+                            <span className="auth-stat-num">5K+</span>
+                            <span className="auth-stat-label">{isEn ? 'Happy Customers' : 'Pelanggan'}</span>
                         </div>
-
-                        {/* LOGIN METHOD SWITCHER TABS */}
-                        <div className="social-auth-buttons" style={{ marginBottom: '24px' }}>
-                            <button
-                                type="button"
-                                className={`btn-social-auth ${loginMethod === 'whatsapp' ? 'active' : ''}`}
-                                onClick={() => { setLoginMethod('whatsapp'); setOtpStep('INPUT_PHONE'); }}
-                                style={{
-                                    border: loginMethod === 'whatsapp' ? '2px solid #25D366' : '1px solid var(--border-color)',
-                                    backgroundColor: loginMethod === 'whatsapp' ? '#F0FDF4' : '#FFFFFF',
-                                    color: loginMethod === 'whatsapp' ? '#25D366' : 'var(--dark)',
-                                    fontWeight: 700
-                                }}
-                            >
-                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px', color: '#25D366' }}></i>
-                                <span>WhatsApp Fast OTP</span>
-                            </button>
-
-                            <button
-                                type="button"
-                                className={`btn-social-auth ${loginMethod === 'email' ? 'active' : ''}`}
-                                onClick={() => setLoginMethod('email')}
-                                style={{
-                                    border: loginMethod === 'email' ? '2px solid var(--primary)' : '1px solid var(--border-color)',
-                                    backgroundColor: loginMethod === 'email' ? '#F0FDF4' : '#FFFFFF',
-                                    color: loginMethod === 'email' ? 'var(--primary)' : 'var(--dark)',
-                                    fontWeight: 700
-                                }}
-                            >
-                                <i className="fa-solid fa-envelope" style={{ fontSize: '16px', color: 'var(--primary)' }}></i>
-                                <span>Email / Password</span>
-                            </button>
+                        <div className="auth-stat-divider" />
+                        <div className="auth-stat-item">
+                            <span className="auth-stat-num">95%</span>
+                            <span className="auth-stat-label">{isEn ? 'Water Saved' : 'Hemat Air'}</span>
                         </div>
+                        <div className="auth-stat-divider" />
+                        <div className="auth-stat-item">
+                            <span className="auth-stat-num">0%</span>
+                            <span className="auth-stat-label">{isEn ? 'Pesticide' : 'Pestisida'}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            {/* RIGHT PANEL — Form */}
+            <div className="premium-auth-right">
+                <div className="premium-auth-right-inner">
+                    {/* Top nav */}
+                    <div className="premium-auth-topbar">
+                        <Link href="/shop" className="premium-auth-back">
+                            <i className="fa-solid fa-arrow-left"></i>
+                            <span>{isEn ? 'Back to Shop' : 'Kembali'}</span>
+                        </Link>
+                        <span className="premium-auth-switch-prompt">
+                            {isEn ? 'No account?' : 'Belum punya akun?'}&nbsp;
+                            <Link href="/register" className="premium-auth-switch-link">
+                                {isEn ? 'Register' : 'Daftar'}
+                            </Link>
+                        </span>
+                    </div>
+
+                    {/* Header */}
+                    <div className="premium-form-header">
+                        <h2 className="premium-form-title">
+                            {isEn ? 'Sign In' : 'Masuk Akun'}
+                        </h2>
+                        <p className="premium-form-subtitle">
+                            {isEn ? 'Choose your preferred login method' : 'Pilih metode masuk yang Anda inginkan'}
+                        </p>
+                    </div>
+
+                    {/* Method Tabs */}
+                    <div className="premium-method-tabs">
+                        <button
+                            type="button"
+                            className={`premium-method-tab ${loginMethod === 'whatsapp' ? 'active-wa' : ''}`}
+                            onClick={() => { setLoginMethod('whatsapp'); setOtpStep('INPUT_PHONE'); }}
+                        >
+                            <i className="fa-brands fa-whatsapp"></i>
+                            <span>WhatsApp OTP</span>
+                        </button>
+                        <button
+                            type="button"
+                            className={`premium-method-tab ${loginMethod === 'email' ? 'active-email' : ''}`}
+                            onClick={() => setLoginMethod('email')}
+                        >
+                            <i className="fa-solid fa-envelope"></i>
+                            <span>Email</span>
+                        </button>
+                    </div>
+
+                    {/* Form Area */}
+                    <div className="premium-form-body">
                         {loginMethod === 'whatsapp' ? (
                             otpStep === 'INPUT_PHONE' ? (
-                                <form onSubmit={handleSendOtp} className="auth-form">
-                                    <div className="form-group">
-                                        <label htmlFor="phoneWa">
-                                            {isEn ? 'WhatsApp Phone Number' : 'Nomor WhatsApp Aktif'} <span style={{ color: '#EF4444' }}>*</span>
+                                <form onSubmit={handleSendOtp} className="premium-form">
+                                    <div className="pf-group">
+                                        <label className="pf-label" htmlFor="phoneWa">
+                                            {isEn ? 'WhatsApp Number' : 'Nomor WhatsApp'}
+                                            <span className="pf-required">*</span>
                                         </label>
-                                        <div style={{ display: 'flex', gap: '8px' }}>
-                                            <span style={{ padding: '12px 14px', backgroundColor: '#F1F5F9', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', fontSize: '14px', fontWeight: 700, color: 'var(--dark)' }}>
-                                                +62
-                                            </span>
+                                        <div className="pf-phone-row">
+                                            <span className="pf-phone-prefix">+62</span>
                                             <input
                                                 type="tel"
                                                 id="phoneWa"
@@ -281,176 +268,152 @@ function LoginFormInner() {
                                                 placeholder="81234567890"
                                                 value={phoneWa}
                                                 onChange={(e) => setPhoneWa(e.target.value.replace(/[^0-9]/g, ''))}
-                                                className="form-control"
-                                                style={{ flex: 1 }}
+                                                className="pf-input"
                                             />
                                         </div>
+                                        <span className="pf-hint">
+                                            <i className="fa-solid fa-circle-info"></i>
+                                            {isEn ? 'We\'ll send a 6-digit OTP to this number.' : 'Kode OTP 6-digit akan dikirim ke nomor ini.'}
+                                        </span>
                                     </div>
 
-                                    <button
-                                        type="submit"
-                                        disabled={isLoading}
-                                        className="btn btn-block"
-                                        style={{
-                                            backgroundColor: '#25D366',
-                                            color: '#FFFFFF',
-                                            padding: '14px',
-                                            fontSize: '15px',
-                                            fontWeight: 800,
-                                            borderRadius: 'var(--radius-md)',
-                                            border: 'none',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '8px',
-                                            marginTop: '10px'
-                                        }}
-                                    >
+                                    <button type="submit" disabled={isLoading} className="pf-btn pf-btn-wa">
                                         {isLoading ? (
-                                            <span>Mengirim Kode OTP...</span>
+                                            <><i className="fa-solid fa-spinner fa-spin"></i><span>{isEn ? 'Sending OTP...' : 'Mengirim OTP...'}</span></>
                                         ) : (
-                                            <>
-                                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                                                <span>Kirim Kode OTP WhatsApp</span>
-                                            </>
+                                            <><i className="fa-brands fa-whatsapp"></i><span>{isEn ? 'Send OTP via WhatsApp' : 'Kirim Kode OTP WA'}</span></>
                                         )}
                                     </button>
                                 </form>
                             ) : (
-                                <form onSubmit={handleVerifyOtp} className="auth-form">
-                                    <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-                                        <span style={{ fontSize: '13.5px', color: 'var(--text-muted)' }}>
-                                            Kode 6 digit OTP dikirim ke <strong>+62{phoneWa}</strong>
-                                        </span>
+                                <form onSubmit={handleVerifyOtp} className="premium-form">
+                                    <div className="pf-otp-info">
+                                        <i className="fa-brands fa-whatsapp pf-otp-icon"></i>
+                                        <div>
+                                            <div className="pf-otp-text">{isEn ? 'Code sent to' : 'Kode dikirim ke'}</div>
+                                            <div className="pf-otp-number">+62{phoneWa}</div>
+                                        </div>
+                                    </div>
 
-                                        {demoOtp && (
-                                            <div style={{
-                                                marginTop: '10px',
-                                                padding: '10px 14px',
-                                                backgroundColor: '#FEF3C7',
-                                                border: '1.5px dashed #F59E0B',
-                                                borderRadius: 'var(--radius-md)',
-                                                color: '#92400E',
-                                                fontSize: '13px'
-                                            }}>
-                                                💡 <strong>Simulasi OTP Demo:</strong> Kode OTP Anda adalah <strong>{demoOtp}</strong>
-                                            </div>
+                                    {demoOtp && (
+                                        <div className="pf-demo-box">
+                                            <i className="fa-solid fa-key"></i>
+                                            <span>{isEn ? 'Demo OTP:' : 'OTP Demo:'} <strong>{demoOtp}</strong></span>
+                                        </div>
+                                    )}
+
+                                    <div className="pf-group">
+                                        <label className="pf-label" style={{ textAlign: 'center', display: 'block' }}>
+                                            {isEn ? 'Enter 6-Digit OTP Code' : 'Masukkan Kode OTP 6-Digit'}
+                                        </label>
+                                        <div className="pf-otp-row">
+                                            {otpDigits.map((digit, idx) => (
+                                                <input
+                                                    key={idx}
+                                                    ref={inputRefs[idx]}
+                                                    type="text"
+                                                    maxLength={1}
+                                                    value={digit}
+                                                    onChange={(e) => handleDigitChange(idx, e.target.value)}
+                                                    onKeyDown={(e) => handleKeyDown(idx, e)}
+                                                    className={`pf-otp-digit ${digit ? 'filled' : ''}`}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" disabled={isLoading} className="pf-btn pf-btn-wa">
+                                        {isLoading ? (
+                                            <><i className="fa-solid fa-spinner fa-spin"></i><span>{isEn ? 'Verifying...' : 'Memverifikasi...'}</span></>
+                                        ) : (
+                                            <><i className="fa-solid fa-shield-halved"></i><span>{isEn ? 'Verify & Sign In' : 'Verifikasi & Masuk'}</span></>
                                         )}
-                                    </div>
-
-                                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '20px' }}>
-                                        {otpDigits.map((digit, idx) => (
-                                            <input
-                                                key={idx}
-                                                ref={inputRefs[idx]}
-                                                type="text"
-                                                maxLength={1}
-                                                value={digit}
-                                                onChange={(e) => handleDigitChange(idx, e.target.value)}
-                                                onKeyDown={(e) => handleKeyDown(idx, e)}
-                                                style={{
-                                                    width: '46px',
-                                                    height: '52px',
-                                                    textAlign: 'center',
-                                                    fontSize: '20px',
-                                                    fontWeight: 800,
-                                                    borderRadius: 'var(--radius-md)',
-                                                    border: digit ? '2px solid #25D366' : '1px solid var(--border-color)',
-                                                    backgroundColor: digit ? '#F0FDF4' : '#FFFFFF'
-                                                }}
-                                            />
-                                        ))}
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        disabled={isLoading}
-                                        className="btn btn-block"
-                                        style={{
-                                            backgroundColor: '#25D366',
-                                            color: '#FFFFFF',
-                                            padding: '14px',
-                                            fontSize: '15px',
-                                            fontWeight: 800,
-                                            borderRadius: 'var(--radius-md)',
-                                            border: 'none',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '8px'
-                                        }}
-                                    >
-                                        {isLoading ? <span>Memverifikasi...</span> : <span>Verifikasi &amp; Masuk</span>}
                                     </button>
 
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginTop: '14px' }}>
-                                        <button
-                                            type="button"
-                                            onClick={() => setOtpStep('INPUT_PHONE')}
-                                            style={{ border: 'none', background: 'none', color: 'var(--primary)', cursor: 'pointer', fontWeight: 600 }}
-                                        >
-                                            Ganti Nomor WA
+                                    <div className="pf-otp-actions">
+                                        <button type="button" className="pf-ghost-btn" onClick={() => setOtpStep('INPUT_PHONE')}>
+                                            <i className="fa-solid fa-arrow-left"></i>
+                                            {isEn ? 'Change Number' : 'Ganti Nomor'}
                                         </button>
-
                                         <button
                                             type="button"
                                             disabled={!canResend}
+                                            className={`pf-ghost-btn ${canResend ? 'pf-ghost-active' : ''}`}
                                             onClick={() => handleSendOtp()}
-                                            style={{ border: 'none', background: 'none', color: canResend ? '#25D366' : 'var(--text-muted)', cursor: canResend ? 'pointer' : 'not-allowed', fontWeight: 600 }}
                                         >
-                                            {canResend ? 'Kirim Ulang OTP' : `Kirim Ulang (${timerCount}s)`}
+                                            {canResend ? (isEn ? 'Resend OTP' : 'Kirim Ulang') : `${isEn ? 'Resend in' : 'Ulang'} ${timerCount}s`}
                                         </button>
                                     </div>
                                 </form>
                             )
                         ) : (
-                            <form onSubmit={handleEmailLogin} className="auth-form">
-                                <div className="form-group">
-                                    <label htmlFor="email">Email</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        required
-                                        placeholder="nama@gmail.com"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="form-control"
-                                    />
+                            <form onSubmit={handleEmailLogin} className="premium-form">
+                                <div className="pf-group">
+                                    <label className="pf-label" htmlFor="loginEmail">Email</label>
+                                    <div className="pf-input-wrap">
+                                        <i className="fa-regular fa-envelope pf-input-icon"></i>
+                                        <input
+                                            type="email"
+                                            id="loginEmail"
+                                            required
+                                            placeholder="nama@email.com"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="pf-input pf-input-with-icon"
+                                        />
+                                    </div>
                                 </div>
 
-                                <div className="form-group">
-                                    <label htmlFor="password">Password</label>
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        required
-                                        placeholder="••••••••"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="form-control"
-                                    />
+                                <div className="pf-group">
+                                    <div className="pf-label-row">
+                                        <label className="pf-label" htmlFor="loginPassword">Password</label>
+                                        <span className="pf-forgot">{isEn ? 'Forgot password?' : 'Lupa password?'}</span>
+                                    </div>
+                                    <div className="pf-input-wrap">
+                                        <i className="fa-solid fa-lock pf-input-icon"></i>
+                                        <input
+                                            type={showPassword ? 'text' : 'password'}
+                                            id="loginPassword"
+                                            required
+                                            placeholder="••••••••"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className="pf-input pf-input-with-icon pf-input-with-toggle"
+                                        />
+                                        <button
+                                            type="button"
+                                            className="pf-pw-toggle"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <button
-                                    type="submit"
-                                    disabled={isLoading}
-                                    className="btn btn-primary btn-block"
-                                    style={{ padding: '14px', fontSize: '15px', fontWeight: 800 }}
-                                >
-                                    {isLoading ? <span>Memproses...</span> : <span>Masuk Akun</span>}
+                                <button type="submit" disabled={isLoading} className="pf-btn pf-btn-primary">
+                                    {isLoading ? (
+                                        <><i className="fa-solid fa-spinner fa-spin"></i><span>{isEn ? 'Signing In...' : 'Memproses...'}</span></>
+                                    ) : (
+                                        <><i className="fa-solid fa-arrow-right-to-bracket"></i><span>{isEn ? 'Sign In' : 'Masuk Akun'}</span></>
+                                    )}
                                 </button>
                             </form>
                         )}
+                    </div>
 
-                        {/* FOOTER REGISTER PROMPT */}
-                        <div className="auth-form-footer" style={{ marginTop: '24px', textAlign: 'center' }}>
-                            <p style={{ fontSize: '13.5px', color: 'var(--text-muted)' }}>
-                                {isEn ? 'Dont have an account yet?' : 'Belum memiliki akun kebun?'}{' '}
-                                <Link href="/register" style={{ color: 'var(--primary)', fontWeight: 700 }}>
-                                    {isEn ? 'Register Free' : 'Daftar Akun Baru'}
-                                </Link>
-                            </p>
+                    {/* Footer */}
+                    <div className="premium-form-footer">
+                        <div className="pf-divider">
+                            <span></span>
+                            <span className="pf-divider-text">{isEn ? 'or' : 'atau'}</span>
+                            <span></span>
                         </div>
+                        <p className="pf-footer-text">
+                            {isEn ? 'Don\'t have an account?' : 'Belum punya akun?'}&nbsp;
+                            <Link href="/register" className="pf-footer-link">
+                                {isEn ? 'Create one for free' : 'Daftar gratis sekarang'}
+                            </Link>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -461,9 +424,9 @@ function LoginFormInner() {
 export default function LoginPage() {
     return (
         <Suspense fallback={
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#F8FAFC' }}>
-                <div style={{ textAlign: 'center', color: 'var(--primary)', fontSize: '16px', fontWeight: 700 }}>
-                    <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '28px', marginBottom: '12px' }}></i>
+            <div className="auth-loading-screen">
+                <div className="auth-loading-inner">
+                    <i className="fa-solid fa-seedling fa-spin"></i>
                     <p>Memuat Halaman Login...</p>
                 </div>
             </div>
