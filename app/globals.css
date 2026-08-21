@@ -1414,46 +1414,146 @@
 }
 
 /* ==========================================================================
-   DARK MODE OVERRIDES ([data-theme="dark"])
+   COMPLETE EXHAUSTIVE DARK MODE SYSTEM ([data-theme="dark"])
    ========================================================================== */
 [data-theme="dark"] {
-    --bg-body: #0F172A;
-    --bg-card: #1E293B;
-    --dark: #F8FAFC;
-    --text-main: #F1F5F9;
-    --text-muted: #94A3B8;
+    --primary: #4ADE80;            /* Vibrant Emerald Green */
+    --primary-hover: #22C55E;
+    --primary-light: #132E1F;      /* Sage Dark Background */
+    --dark: #F8FAFC;               /* Crisp Readable Text */
+    --dark-hover: #E2E8F0;
+    --secondary: #86EFAC;
+    --accent-orange: #FF8A65;
+    --accent-yellow: #FCD34D;
+    
+    /* Dark Theme Neutrals */
+    --bg-body: #0F172A;            /* Deep Slate Background */
+    --bg-card: #1E293B;            /* Dark Card Container */
+    --text-main: #F1F5F9;          /* Main Text */
+    --text-muted: #94A3B8;          /* Subdued Text */
     --text-light: #64748B;
     --border-color: #334155;
     --border-light: #1E293B;
-    --primary-light: #1E3A29;
-    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+
+    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.7);
+    --shadow-green: 0 6px 20px rgba(74, 222, 128, 0.25);
 }
 
+/* 1. Global Body & Main Backgrounds */
 [data-theme="dark"] body {
     background-color: #0F172A !important;
     color: #F8FAFC !important;
 }
 
-[data-theme="dark"] .main-header,
-[data-theme="dark"] .nav-menu-bar,
-[data-theme="dark"] .recipe-card,
-[data-theme="dark"] .product-card,
-[data-theme="dark"] .detailed-modal-card,
-[data-theme="dark"] .recipe-modal-content,
-[data-theme="dark"] .auth-card,
-[data-theme="dark"] .auth-form-box,
-[data-theme="dark"] .cat-showcase-card,
-[data-theme="dark"] .filter-sidebar {
+[data-theme="dark"] .top-bar {
+    background-color: #132E1F !important;
+    border-bottom: 1px solid #1E3A29 !important;
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .top-info i,
+[data-theme="dark"] .top-selectors select {
+    color: #4ADE80 !important;
+}
+
+/* 2. Main Header & Brand Logo */
+[data-theme="dark"] .main-header {
     background-color: #1E293B !important;
-    border-color: #334155 !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+[data-theme="dark"] .brand-name {
     color: #F8FAFC !important;
 }
 
+[data-theme="dark"] .brand-sub {
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .btn-mobile-toggle {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+}
+
+/* 3. Search Bar */
+[data-theme="dark"] .header-search {
+    background-color: #0F172A !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .search-category {
+    color: #F8FAFC !important;
+    border-right-color: #334155 !important;
+}
+
+[data-theme="dark"] .search-category option {
+    background-color: #1E293B !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .search-input-wrap input {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .search-input-wrap input::placeholder {
+    color: #64748B !important;
+}
+
+[data-theme="dark"] .btn-search {
+    background-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+}
+
+/* 4. Action Buttons & Badges */
+[data-theme="dark"] .action-btn {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .btn-cart-trigger {
+    background-color: #132E1F !important;
+    border-color: #2E7D32 !important;
+}
+
+[data-theme="dark"] .cart-icon-wrap i {
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .cart-total {
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .cart-text {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .badge,
+[data-theme="dark"] .badge-cart,
+[data-theme="dark"] .badge-wishlist {
+    background-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #1E293B !important;
+}
+
+/* 5. Modern Glass Navigation Menu Bar */
 [data-theme="dark"] .nav-menu-bar {
-    background: rgba(30, 41, 59, 0.92) !important;
+    background: rgba(30, 41, 59, 0.95) !important;
     border-bottom: 1px solid #334155 !important;
+}
+
+[data-theme="dark"] .nav-links > li > a {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .nav-links > li > a:hover {
+    color: #4ADE80 !important;
+    background-color: #132E1F !important;
+}
+
+[data-theme="dark"] .nav-links > li > a.active {
+    color: #4ADE80 !important;
+    background-color: #132E1F !important;
 }
 
 [data-theme="dark"] .dropdown-menu {
@@ -1466,59 +1566,418 @@
 }
 
 [data-theme="dark"] .dropdown-menu li a:hover {
-    background-color: #1E3A29 !important;
+    background-color: #132E1F !important;
     color: #4ADE80 !important;
 }
 
+[data-theme="dark"] .nav-selectors select,
+[data-theme="dark"] .nav-select-clean,
+[data-theme="dark"] .nav-select-pill {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .nav-selectors select option {
+    background-color: #1E293B !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .nav-right-promo {
+    background: linear-gradient(135deg, #132E1F 0%, #1A432D 100%) !important;
+    color: #4ADE80 !important;
+}
+
+/* 6. Theme Toggle Button */
+[data-theme="dark"] .btn-theme-toggle {
+    background-color: #0F172A !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .btn-theme-toggle:hover {
+    background-color: #1E293B !important;
+    border-color: #4ADE80 !important;
+    color: #4ADE80 !important;
+}
+
+/* 7. Hero Sections & Banner Cards */
 [data-theme="dark"] .modern-hero-card {
-    background: linear-gradient(135deg, #0F291E 0%, #163B2B 50%, #1E4D38 100%) !important;
+    background: linear-gradient(135deg, #0B1F17 0%, #112F23 50%, #184232 100%) !important;
     border-color: #1E3A29 !important;
 }
 
-[data-theme="dark"] .header-search,
-[data-theme="dark"] .recipe-search-input,
-[data-theme="dark"] .nav-selectors select,
-[data-theme="dark"] .nav-select-clean,
+[data-theme="dark"] .hero-title,
+[data-theme="dark"] .section-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .hero-subtitle,
+[data-theme="dark"] .section-subtitle {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .pill-tag {
+    background: rgba(15, 23, 42, 0.8) !important;
+    color: #F8FAFC !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .floating-glass-card {
+    background: rgba(30, 41, 59, 0.9) !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .modern-hero-badge {
+    background: rgba(19, 46, 31, 0.9) !important;
+    color: #4ADE80 !important;
+    border-color: #1E3A29 !important;
+}
+
+[data-theme="dark"] .btn-glow-primary,
+[data-theme="dark"] .btn-primary,
+[data-theme="dark"] .btn-dark {
+    background-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-glow-primary:hover,
+[data-theme="dark"] .btn-primary:hover,
+[data-theme="dark"] .btn-dark:hover {
+    background-color: #1B5E20 !important;
+}
+
+[data-theme="dark"] .btn-glass,
+[data-theme="dark"] .btn-outline {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .btn-glass:hover,
+[data-theme="dark"] .btn-outline:hover {
+    background-color: #2E7D32 !important;
+    border-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+}
+
+/* 8. Product Cards & Grid */
+[data-theme="dark"] .product-card,
+[data-theme="dark"] .category-card {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .product-title,
+[data-theme="dark"] .category-card h3,
+[data-theme="dark"] .price-current {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .product-cat {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .product-weight-badge {
+    background-color: #0F172A !important;
+    color: #94A3B8 !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .btn-icon-action {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+    border: 1px solid #334155 !important;
+}
+
+[data-theme="dark"] .btn-icon-action:hover {
+    background-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-add-cart {
+    background-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .btn-add-cart:hover {
+    background-color: #1B5E20 !important;
+}
+
+/* 9. Category Showcase Cards */
+[data-theme="dark"] .cat-showcase-card {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .cat-card-body h3 {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .cat-card-body p {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .cat-benefits-pills span {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+    border-color: #1E3A29 !important;
+}
+
+[data-theme="dark"] .cat-cta-btn {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+    border-color: #1E3A29 !important;
+}
+
+[data-theme="dark"] .cat-cta-btn:hover {
+    background-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+}
+
+/* 10. Articles & Recipes Page */
+[data-theme="dark"] .recipe-search-input {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .recipe-cat-tabs {
+    background-color: #0F172A !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .recipe-cat-tab {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .recipe-cat-tab:hover {
+    color: #4ADE80 !important;
+    background-color: #132E1F !important;
+}
+
+[data-theme="dark"] .recipe-cat-tab.active {
+    background-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .recipe-card {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .recipe-card-title,
+[data-theme="dark"] .recipe-results-header h2 {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .recipe-card-summary,
+[data-theme="dark"] .recipe-card-meta {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .recipe-tag {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .recipe-cta-btn {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+    border-color: #1E3A29 !important;
+}
+
+[data-theme="dark"] .recipe-cta-btn:hover {
+    background-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+}
+
+/* 11. Modals & Popups (Product & Recipe Detail) */
+[data-theme="dark"] .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-theme="dark"] .detailed-modal-card,
+[data-theme="dark"] .recipe-modal-content {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .modal-close {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .modal-close:hover {
+    background-color: #EF4444 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .modal-img-container,
+[data-theme="dark"] .spec-card,
+[data-theme="dark"] .recipe-ingredients-box,
+[data-theme="dark"] .recipe-step-item {
+    background-color: #0F172A !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .modal-body h2,
+[data-theme="dark"] .modal-body h3,
+[data-theme="dark"] .recipe-modal-title,
+[data-theme="dark"] .recipe-ingredients-box h3,
+[data-theme="dark"] .recipe-steps-box h3 {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .recipe-ingredients-box ul,
+[data-theme="dark"] .recipe-step-item p {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .modal-qty-selector {
+    background-color: #0F172A !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .btn-modal-qty {
+    color: #F8FAFC !important;
+}
+
+/* 12. Toast Notifications */
+[data-theme="dark"] .toast {
+    background-color: #1E293B !important;
+    color: #F8FAFC !important;
+    border-left: 4px solid #4ADE80 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .toast i {
+    color: #4ADE80 !important;
+}
+
+/* 13. Cart Drawer */
+[data-theme="dark"] .cart-drawer {
+    background-color: #1E293B !important;
+    color: #F8FAFC !important;
+    border-left: 1px solid #334155 !important;
+}
+
+[data-theme="dark"] .cart-drawer-header,
+[data-theme="dark"] .cart-item {
+    border-bottom-color: #334155 !important;
+}
+
+[data-theme="dark"] .cart-drawer-header h3,
+[data-theme="dark"] .cart-item-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .cart-item-price,
+[data-theme="dark"] .cart-subtotal-val {
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .cart-qty-btn {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .cart-drawer-footer {
+    background-color: #0F172A !important;
+    border-top-color: #334155 !important;
+}
+
+/* 14. Auth / Login / Register Page */
+[data-theme="dark"] .auth-card,
+[data-theme="dark"] .auth-form-box {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .auth-title,
+[data-theme="dark"] .form-label {
+    color: #F8FAFC !important;
+}
+
 [data-theme="dark"] .form-control {
     background-color: #0F172A !important;
     color: #F8FAFC !important;
     border-color: #334155 !important;
 }
 
-[data-theme="dark"] .btn-cart-trigger {
-    background-color: #1E3A29 !important;
-    border-color: #2E7D32 !important;
+[data-theme="dark"] .auth-reason-banner {
+    background-color: #132E1F !important;
+    border-color: #1E3A29 !important;
+    color: #4ADE80 !important;
 }
 
-[data-theme="dark"] .btn-theme-toggle {
-    background-color: #0F172A;
-    border-color: #334155;
-    color: #F8FAFC;
-}
-
-[data-theme="dark"] .btn-theme-toggle:hover {
-    background-color: #1E293B;
-    border-color: #4ADE80;
-    color: #4ADE80;
-}
-
-[data-theme="dark"] .recipe-cat-tabs {
-    background-color: #0F172A;
-    border-color: #334155;
-}
-
-[data-theme="dark"] .recipe-cat-tab {
-    color: #94A3B8;
-}
-
-[data-theme="dark"] .recipe-cat-tab:hover {
-    color: #4ADE80;
-    background-color: #1E3A29;
-}
-
-[data-theme="dark"] .recipe-ingredients-box,
-[data-theme="dark"] .spec-card,
-[data-theme="dark"] .modal-img-container {
-    background-color: #0F172A !important;
+/* 15. Filter Sidebar & Categories Page */
+[data-theme="dark"] .filter-sidebar {
+    background-color: #1E293B !important;
     border-color: #334155 !important;
+}
+
+[data-theme="dark"] .filter-title,
+[data-theme="dark"] .filter-group h4 {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .filter-checkbox label {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .price-range-inputs input {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+    border-color: #334155 !important;
+}
+
+/* 16. Why Us & Tracking Section */
+[data-theme="dark"] .why-us-card {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .tracking-card-mockup {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .courier-info h5,
+[data-theme="dark"] .tracking-header h4,
+[data-theme="dark"] .benefit-list strong {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .delivery-status-box,
+[data-theme="dark"] .btn-round-icon {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+}
+
+/* 17. Footer */
+[data-theme="dark"] footer,
+[data-theme="dark"] .main-footer {
+    background-color: #09111E !important;
+    border-top: 1px solid #1E293B !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .footer-title {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .footer-links a {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .footer-links a:hover {
+    color: #4ADE80 !important;
 }
