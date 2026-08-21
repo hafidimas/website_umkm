@@ -2015,3 +2015,216 @@
     color: #64748B !important;
     border-top: 1px solid #1E293B !important;
 }
+
+/* 18. Comprehensive Universal Theme Overrides */
+[data-theme="dark"] section,
+[data-theme="dark"] .section,
+[data-theme="dark"] .why-us-section,
+[data-theme="dark"] .why-us-main-section,
+[data-theme="dark"] .comparison-section,
+[data-theme="dark"] .articles-section,
+[data-theme="dark"] .recipes-section,
+[data-theme="dark"] .bestsellers-section,
+[data-theme="dark"] .shop-hero-section {
+    background-color: #0F172A !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .section-title,
+[data-theme="dark"] .section-header h2,
+[data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, [data-theme="dark"] h4 {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .section-subtitle,
+[data-theme="dark"] .section-header p,
+[data-theme="dark"] p {
+    color: #CBD5E1 !important;
+}
+
+/* Why-us cards & comparison table */
+[data-theme="dark"] .why-card {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .why-card h3 {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .why-card p {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .comparison-table {
+    border-color: #334155 !important;
+    background-color: #1E293B !important;
+}
+
+[data-theme="dark"] .comparison-table th {
+    background-color: #1E293B !important;
+    color: #F8FAFC !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+[data-theme="dark"] .comparison-table th.th-soil {
+    background-color: #1E293B !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .comparison-table th.th-hydro {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .comparison-table td {
+    background-color: #1E293B !important;
+    color: #F8FAFC !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+[data-theme="dark"] .comparison-table tr.tr-alt td {
+    background-color: #0F172A !important;
+}
+
+/* Filter Sidebar on Shop Page */
+[data-theme="dark"] .filter-sidebar {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .filter-sidebar h3,
+[data-theme="dark"] .filter-sidebar h4,
+[data-theme="dark"] .filter-title,
+[data-theme="dark"] .filter-group h4 {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .filter-sidebar span,
+[data-theme="dark"] .filter-sidebar label,
+[data-theme="dark"] .filter-checkbox label {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .filter-category-item {
+    background-color: #0F172A !important;
+    color: #CBD5E1 !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .filter-category-item.active {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+}
+
+/* Recipe & Article Badges */
+[data-theme="dark"] .recipe-type-badge.artikel,
+[data-theme="dark"] .recipe-type-badge.resep {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+    border: 1px solid #1E3A29 !important;
+}
+
+/* Comparison Grid Styling */
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.comparison-card {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.comparison-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.comparison-param-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 16px;
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 10px;
+}
+
+.comparison-cols {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comp-col {
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.comp-col-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.soil-col {
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #991B1B;
+}
+
+.soil-col .comp-col-header {
+    color: #DC2626;
+}
+
+.hydro-col {
+    background-color: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    color: #166534;
+}
+
+.hydro-col .comp-col-header {
+    color: #16A34A;
+}
+
+/* Dark Mode Overrides for Comparison Grid */
+[data-theme="dark"] .comparison-card {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .comparison-param-title {
+    color: #F8FAFC !important;
+    border-bottom-color: #334155 !important;
+}
+
+[data-theme="dark"] .soil-col {
+    background-color: #2C1517 !important;
+    border-color: #451A1D !important;
+    color: #FCA5A5 !important;
+}
+
+[data-theme="dark"] .soil-col .comp-col-header {
+    color: #F87171 !important;
+}
+
+[data-theme="dark"] .hydro-col {
+    background-color: #132E1F !important;
+    border-color: #1E3A29 !important;
+    color: #86EFAC !important;
+}
+
+[data-theme="dark"] .hydro-col .comp-col-header {
+    color: #4ADE80 !important;
+}

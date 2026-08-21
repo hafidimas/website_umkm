@@ -321,7 +321,7 @@ export default function RecipesPage() {
 
             {/* CONTAINER ATAS: ARTIKEL */}
             {filteredArticles.length > 0 && (
-                <section className="section articles-section" style={{ backgroundColor: '#F9F8F3', padding: '60px 0' }}>
+                <section className="section articles-section" style={{ padding: '60px 0' }}>
                     <div className="container">
                         <div className="section-header center">
                             <span className="sub-header-tag"><i className="fa-solid fa-newspaper"></i> {isEn ? 'ARTICLES SECTION' : 'BAGIAN ARTIKEL & TIPS'}</span>
@@ -378,7 +378,7 @@ export default function RecipesPage() {
             )}
 
             {/* CONTAINER BAWAH: RESEP */}
-            <section className="section recipes-section" style={{ backgroundColor: '#FFFFFF', padding: '60px 0' }}>
+            <section className="section recipes-section" style={{ padding: '60px 0' }}>
                 <div className="container">
                     <div className="section-header center">
                         <span className="sub-header-tag"><i className="fa-solid fa-utensils"></i> {isEn ? 'INDONESIAN RECIPES' : 'RESEP MASAKAN SEHAT'}</span>
