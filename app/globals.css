@@ -1940,9 +1940,31 @@
 }
 
 /* 16. Why Us & Tracking Section */
-[data-theme="dark"] .why-us-card {
+[data-theme="dark"] .why-us-section,
+[data-theme="dark"] .why-us-card,
+[data-theme="dark"] .why-card {
     background-color: #1E293B !important;
     border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .why-card h3 {
+    color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .why-card p {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .why-icon-box,
+[data-theme="dark"] .why-tag-pill,
+[data-theme="dark"] .why-card-badge {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .why-card-footer {
+    border-top-color: #334155 !important;
 }
 
 [data-theme="dark"] .tracking-card-mockup {
@@ -1962,7 +1984,7 @@
     color: #F8FAFC !important;
 }
 
-/* 17. Footer */
+/* 17. Footer Overrides */
 [data-theme="dark"] footer,
 [data-theme="dark"] .main-footer {
     background-color: #09111E !important;
@@ -1970,14 +1992,26 @@
     color: #94A3B8 !important;
 }
 
-[data-theme="dark"] .footer-title {
+[data-theme="dark"] .main-footer h4,
+[data-theme="dark"] .main-footer strong,
+[data-theme="dark"] .footer-title,
+[data-theme="dark"] .white-text {
     color: #F8FAFC !important;
 }
 
-[data-theme="dark"] .footer-links a {
-    color: #94A3B8 !important;
+[data-theme="dark"] .main-footer span,
+[data-theme="dark"] .main-footer p,
+[data-theme="dark"] .footer-desc,
+[data-theme="dark"] .footer-col ul li a {
+    color: #CBD5E1 !important;
 }
 
-[data-theme="dark"] .footer-links a:hover {
+[data-theme="dark"] .footer-col ul li a:hover {
     color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .footer-bottom {
+    background-color: #050B14 !important;
+    color: #64748B !important;
+    border-top: 1px solid #1E293B !important;
 }
