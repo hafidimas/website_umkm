@@ -3530,3 +3530,119 @@ button {
 
 
 
+/* ==========================================================================
+   DARK MODE OVERRIDES - Added at end for highest cascade priority
+   ========================================================================== */
+
+/* Section Headers */
+[data-theme="dark"] .sub-header-tag {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+    border: 1px solid #2D6A4F !important;
+    display: inline-block !important;
+    padding: 5px 14px !important;
+    border-radius: 9999px !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 1px !important;
+}
+
+[data-theme="dark"] .section-title {
+    color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] .section-subtitle {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .view-all-link {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .view-all-link:hover {
+    color: #4ADE80 !important;
+}
+
+/* Shop Sidebar */
+[data-theme="dark"] .sidebar-box {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .sidebar-header {
+    border-bottom-color: #334155 !important;
+}
+
+[data-theme="dark"] .sidebar-header h3 {
+    color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] .btn-reset-filter {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .filter-group {
+    border-bottom-color: #334155 !important;
+}
+
+[data-theme="dark"] .filter-group h4 {
+    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .cat-filter-btn {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .cat-filter-btn:hover {
+    background-color: #0F172A !important;
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .cat-filter-btn.active {
+    background-color: #132E1F !important;
+    color: #4ADE80 !important;
+}
+
+[data-theme="dark"] .cat-count {
+    background-color: #0F172A !important;
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .cat-filter-btn.active .cat-count {
+    background-color: #2E7D32 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .filter-checkbox,
+[data-theme="dark"] .filter-radio {
+    color: #CBD5E1 !important;
+}
+
+[data-theme="dark"] .price-range-labels {
+    color: #94A3B8 !important;
+}
+
+/* Shop Controls Bar */
+[data-theme="dark"] .shop-controls-bar {
+    background-color: #1E293B !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .results-info {
+    color: #94A3B8 !important;
+}
+
+[data-theme="dark"] .results-info strong {
+    color: #F1F5F9 !important;
+}
+
+[data-theme="dark"] .shop-sort-wrap {
+    color: #E2E8F0 !important;
+}
+
+[data-theme="dark"] .shop-sort-wrap select {
+    background-color: #0F172A !important;
+    color: #F1F5F9 !important;
+    border-color: #334155 !important;
+}
