@@ -56,7 +56,7 @@ export default function RegisterPage() {
                 showToast(result.message, 'fa-circle-check');
                 setTimeout(() => router.push('/shop'), 1000);
             } else {
-                showToast(result.message || isEn ? 'Registration failed' : 'Pendaftaran gagal', 'fa-triangle-exclamation');
+                showToast(result.message || (isEn ? 'Registration failed' : 'Pendaftaran gagal'), 'fa-triangle-exclamation');
             }
         } catch {
             showToast(isEn ? 'Server connection error' : 'Gagal terhubung ke server', 'fa-triangle-exclamation');
